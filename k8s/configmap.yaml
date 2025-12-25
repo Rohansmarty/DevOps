@@ -1,3 +1,4 @@
+# ConfigMap for devops-java-app
 apiVersion: v1
 kind: ConfigMap
 metadata:
