@@ -20,13 +20,13 @@
 		void health_returnsUp() throws Exception {
 			mockMvc.perform(get("/health"))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.status").value("UP"));
+				.andExpect(jsonPath("$.status").value("healthy"));
 		}
 
 		@Test
 		void root_returnsMessage() throws Exception {
 			mockMvc.perform(get("/"))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.message").value("Hello from DevOps Java app"));
+				.andExpect(jsonPath("$.message").value("Hello from DevOps CI/CD Pipeline!"));
 		}
 	}

@@ -1,4 +1,4 @@
-﻿package com.devops.demo.controller;
+package com.devops.demo.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +17,7 @@ public class DevOpsController {
     @GetMapping
     public ResponseEntity<Map<String, Object>> home() {
         Map<String, Object> response = new HashMap<>();
-        response.put("message", "Hello from DevOps CI/CD Pipeline! ðŸš€");
+        response.put("message", "Hello from DevOps CI/CD Pipeline!");
         response.put("language", "Java");
         response.put("framework", "Spring Boot");
         response.put("version", "1.0.0");
