@@ -16,7 +16,7 @@
 	    spec:
 	      containers:
 	        - name: devops-java-app
-	          image: YOUR_DOCKERHUB_USERNAME/devops-java-app:latest
+	          image: rohansmarty/devops-java-app:latest
 	          imagePullPolicy: IfNotPresent
 	          ports:
 	            - name: http
