@@ -1,0 +1,38 @@
+	apiVersion: apps/v1
+	kind: Deployment
+	metadata:
+	  name: devops-java-app
+	  labels:
+	    app: devops-java-app
+	spec:
+	  replicas: 1
+	  selector:
+	    matchLabels:
+	      app: devops-java-app
+	  template:
+	    metadata:
+	      labels:
+	        app: devops-java-app
+	    spec:
+	      containers:
+	        - name: devops-java-app
+	          image: YOUR_DOCKERHUB_USERNAME/devops-java-app:latest
+	          imagePullPolicy: IfNotPresent
+	          ports:
+	            - name: http
+	              containerPort: 8080
+	          envFrom:
+	            - configMapRef:
+	                name: devops-java-app-config
+	          readinessProbe:
+	            httpGet:
+	              path: /actuator/health
+	              port: 8080
+	            initialDelaySeconds: 15
+	            periodSeconds: 10
+	          livenessProbe:
+	            httpGet:
+	              path: /actuator/health
+	              port: 8080
+	            initialDelaySeconds: 30
+	            periodSeconds: 20

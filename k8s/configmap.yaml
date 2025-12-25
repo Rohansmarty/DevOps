@@ -1,0 +1,7 @@
+	apiVersion: v1
+	kind: ConfigMap
+	metadata:
+	  name: devops-java-app-config
+	data:
+	  SPRING_APPLICATION_NAME: devops-demo
+	  SERVER_PORT: "8080"

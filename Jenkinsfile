@@ -1,8 +1,8 @@
-﻿pipeline {
+pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = 'your-dockerhub-username/devops-app'
+        DOCKER_IMAGE = 'YOUR_DOCKERHUB_USERNAME/devops-java-app'
         DOCKER_TAG = "${env.BUILD_NUMBER}"
         DOCKER_LATEST = "${DOCKER_IMAGE}:latest"
         DOCKER_VERSIONED = "${DOCKER_IMAGE}:${DOCKER_TAG}"
@@ -11,31 +11,25 @@
     stages {
         stage('Checkout') {
             steps {
-                echo 'ðŸ”„ Checking out source code...'
+                echo 'Checking out source code...'
                 checkout scm
             }
         }
 
-        stage('Code Quality Check') {
+        stage('Compile') {
             steps {
-                echo 'ðŸ” Running code quality checks...'
+                echo 'Compiling java-app...'
                 sh '''
-                    cd java-app
-                    # Run Maven compile to check for compilation errors
-                    ./mvnw compile
-
-                    # Check if Java files exist
-                    find src -name "*.java" | head -5
+                    mvn -q -f java-app/pom.xml -DskipTests compile
                 '''
             }
         }
 
         stage('Run Unit Tests') {
             steps {
-                echo 'ðŸ§ª Running unit tests...'
+                echo 'Running unit tests...'
                 sh '''
-                    cd java-app
-                    ./mvnw test
+                    mvn -q -f java-app/pom.xml test
                 '''
             }
             post {
@@ -47,27 +41,25 @@
 
         stage('Build Application') {
             steps {
-                echo 'ðŸ”¨ Building Java application...'
+                echo 'Building Java application...'
                 sh '''
-                    cd java-app
-                    ./mvnw clean package -DskipTests
+                    mvn -q -f java-app/pom.xml -DskipTests clean package
                 '''
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                echo 'ðŸ—ï¸ Building Docker image...'
+                echo 'Building Docker image...'
                 sh '''
-                    cd java-app
-                    docker build -t ${DOCKER_VERSIONED} -t ${DOCKER_LATEST} .
+                    docker build -t ${DOCKER_VERSIONED} -t ${DOCKER_LATEST} java-app
                 '''
             }
         }
 
         stage('Test Application') {
             steps {
-                echo 'ðŸ§ª Testing application...'
+                echo 'Testing application...'
                 sh '''
                     # Start container for testing
                     docker run -d --name test-app -p 8081:8080 ${DOCKER_LATEST}
@@ -87,7 +79,7 @@
 
         stage('Push Docker Image') {
             steps {
-                echo 'ðŸ“¤ Pushing Docker image to registry...'
+                echo 'Pushing Docker image to registry...'
                 withDockerRegistry([credentialsId: 'dockerhub-creds', url: '']) {
                     sh '''
                         docker push ${DOCKER_VERSIONED}
