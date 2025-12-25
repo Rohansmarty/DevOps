@@ -1,0 +1,10 @@
+	#!/usr/bin/env sh
+	set -eu
+	
+	if command -v mvn >/dev/null 2>&1; then
+		exec mvn "$@"
+	fi
+
+	echo "mvn is not installed and this repository does not include the full Maven Wrapper scripts." 1>&2
+	echo "Install Maven (mvn) or add the full Maven Wrapper (mvnw + mvnw.cmd + .mvn/wrapper/maven-wrapper.jar)." 1>&2
+	exit 1
