@@ -1,20 +1,12 @@
-﻿# Multi-stage build for Java Spring Boot application
-FROM eclipse-temurin:17-jdk-alpine as builder
-
-WORKDIR /app
-
-COPY pom.xml .
-COPY src ./src
-
-RUN ./mvnw clean package -DskipTests
-
+﻿# Simple build for Java Spring Boot application
 FROM eclipse-temurin:17-jre-alpine
 
 RUN apk add --no-cache curl
 
 WORKDIR /app
 
-COPY --from=builder /app/target/*.jar app.jar
+# Copy the pre-built JAR file
+COPY target/demo-1.0.0.jar app.jar
 
 EXPOSE 8080
 
