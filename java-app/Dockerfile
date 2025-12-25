@@ -1,11 +1,21 @@
-	FROM maven:3.9.6-eclipse-temurin-17 AS build
-	WORKDIR /workspace
-	COPY pom.xml .
-	COPY src ./src
-	RUN mvn -q -DskipTests package
+﻿# Multi-stage build for Java Spring Boot application
+FROM eclipse-temurin:17-jdk-alpine as builder
 
-	FROM eclipse-temurin:17-jre
-	WORKDIR /app
-	COPY --from=build /workspace/target/*.jar /app/app.jar
-	EXPOSE 8080
-	ENTRYPOINT ["java","-jar","/app/app.jar"]
+WORKDIR /app
+
+COPY pom.xml .
+COPY src ./src
+
+RUN ./mvnw clean package -DskipTests
+
+FROM eclipse-temurin:17-jre-alpine
+
+RUN apk add --no-cache curl
+
+WORKDIR /app
+
+COPY --from=builder /app/target/*.jar app.jar
+
+EXPOSE 8080
+
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]
